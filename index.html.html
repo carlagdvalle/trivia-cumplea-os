@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivia de Cumpleaños Kawaii ✨</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Fredoka & Nunito -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        kawaiiPink: '#FFB7C5',
+                        kawaiiSoftPink: '#FFF0F5',
+                        kawaiiDarkPink: '#FF69B4',
+                        kawaiiLavender: '#E6E6FA',
+                        kawaiiMint: '#B2FBA5',
+                        kawaiiYellow: '#FFFACD',
+                        kawaiiPurple: '#9370DB',
+                        kawaiiCream: '#FFFDD0'
+                    },
+                    fontFamily: {
+                        fredoka: ['Fredoka', 'sans-serif'],
+                        nunito: ['Nunito', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Fredoka', cursive, sans-serif;
+            background: linear-gradient(135deg, #FFF0F5 0%, #E6E6FA 50%, #E0F7FA 100%);
+            min-height: 100vh;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Bubbly Kawaii Button Effect */
+        .btn-kawaii {
+            box-shadow: 0px 6px 0px #FF94B9;
+            transition: all 0.1s ease;
+        }
+        .btn-kawaii:active {
+            transform: translateY(4px);
+            box-shadow: 0px 2px 0px #FF94B9;
+        }
+
+        .btn-kawaii-purple {
+            box-shadow: 0px 6px 0px #7B68EE;
+            transition: all 0.1s ease;
+        }
+        .btn-kawaii-purple:active {
+            transform: translateY(4px);
+            box-shadow: 0px 2px 0px #7B68EE;
+        }
+
+        .btn-option {
+            box-shadow: 0px 5px 0px #D8BFD8;
+            transition: all 0.15s ease;
+        }
+        .btn-option:active {
+            transform: translateY(3px);
+            box-shadow: 0px 2px 0px #D8BFD8;
+        }
+
+        /* Float animation */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Pulse animation for timer */
+        @keyframes pulse-fast {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+        .pulse-urgent {
+            animation: pulse-fast 0.5s infinite;
+        }
+    </style>
+</head>
+<body class="flex flex-col justify-between items-center p-4 min-h-screen text-slate-700">
+
+    <!-- Sparkle background details -->
+    <div class="fixed top-4 left-4 text-2xl text-pink-300 animate-float pointer-events-none">✨</div>
+    <div class="fixed top-12 right-6 text-3xl text-purple-300 animate-float pointer-events-none" style="animation-delay: 1s;">🌸</div>
+    <div class="fixed bottom-6 left-6 text-3xl text-yellow-300 animate-float pointer-events-none" style="animation-delay: 1.5s;">⭐</div>
+    <div class="fixed bottom-10 right-4 text-2xl text-teal-300 animate-float pointer-events-none" style="animation-delay: 0.5s;">🎀</div>
+
+    <!-- Header bar -->
+    <header class="w-full max-w-md flex justify-between items-center py-2 px-4 bg-white/80 backdrop-blur-md rounded-full shadow-sm border-2 border-pink-200 z-10">
+        <div class="flex items-center gap-2">
+            <span class="text-2xl">🍰</span>
+            <span class="font-bold text-pink-500 tracking-wide text-lg">Birthday Trivia!</span>
+        </div>
+        <button onclick="openAdminModal()" class="text-xs bg-pink-100 hover:bg-pink-200 text-pink-600 px-3 py-1.5 rounded-full border border-pink-300 flex items-center gap-1">
+            <i class="fa-solid fa-lock text-pink-400"></i> Anfitrión
+        </button>
+    </header>
+
+    <!-- Main Container -->
+    <main class="w-full max-w-md my-auto flex flex-col items-center justify-center py-4 z-10">
+
+        <!-- SCREEN 1: START SCREEN -->
+        <div id="screen-start" class="w-full bg-white/90 backdrop-blur-md p-6 rounded-3xl shadow-xl border-4 border-pink-200 text-center flex flex-col items-center gap-5">
+            <div class="relative">
+                <div class="w-24 h-24 bg-pink-100 rounded-full flex items-center justify-center text-5xl shadow-inner border-2 border-pink-300 animate-float">
+                    🐱
+                </div>
+                <span class="absolute -bottom-1 -right-1 text-xl">✨</span>
+            </div>
+
+            <div>
+                <h1 class="text-3xl font-black text-pink-500 tracking-wide">¡Bienvenidos!</h1>
+                <p class="text-sm text-slate-500 mt-1">Demuestra tus conocimientos en esta trivia especial de cumpleaños 🎉</p>
+            </div>
+
+            <div class="w-full text-left">
+                <label for="playerName" class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2 ml-1">
+                    <i class="fa-solid fa-user text-pink-400 mr-1"></i> Escribe tu nombre o apodo:
+                </label>
+                <input type="text" id="playerName" placeholder="Ej: Maria 💕" 
+                    class="w-full px-4 py-3 text-lg rounded-2xl border-2 border-pink-200 focus:border-pink-400 focus:outline-none bg-pink-50/50 text-slate-700 placeholder-pink-300 font-bold transition">
+            </div>
+
+            <div class="bg-purple-50 p-3.5 rounded-2xl border border-purple-100 text-left w-full text-xs text-purple-700 leading-relaxed">
+                <p class="font-bold mb-1"><i class="fa-solid fa-circle-info mr-1"></i> Reglas del juego:</p>
+                <ul class="list-disc list-inside space-inside-1">
+                    <li>10 Preguntas de cultura general.</li>
+                    <li>¡Tienes <strong>7 segundos</strong> por pregunta!</li>
+                    <li>Las respuestas se guardarán en secreto 🤫</li>
+                </ul>
+            </div>
+
+            <button onclick="startGame()" class="w-full py-4 bg-pink-400 hover:bg-pink-500 text-white font-extrabold text-xl rounded-2xl btn-kawaii tracking-wider flex items-center justify-center gap-2">
+                ¡EMPEZAR A JUGAR! 🚀
+            </button>
+        </div>
+
+        <!-- SCREEN 2: TRIVIA GAME -->
+        <div id="screen-game" class="hidden w-full bg-white/90 backdrop-blur-md p-6 rounded-3xl shadow-xl border-4 border-pink-200 flex flex-col gap-4">
+            
+            <!-- Question counter & Timer header -->
+            <div class="flex justify-between items-center border-b-2 border-pink-100 pb-3">
+                <div class="flex items-center gap-2">
+                    <span id="question-number-badge" class="bg-pink-400 text-white text-xs font-black px-3 py-1 rounded-full uppercase">
+                        Pregunta 1/10
+                    </span>
+                </div>
+                
+                <!-- Timer display -->
+                <div id="timer-box" class="flex items-center gap-1.5 bg-amber-100 text-amber-700 px-3.5 py-1 rounded-full font-black text-sm border border-amber-300">
+                    <i class="fa-solid fa-clock"></i>
+                    <span id="timer-text">7s</span>
+                </div>
+            </div>
+
+            <!-- Progress Bar (7 sec visual countdown) -->
+            <div class="w-full bg-pink-100 h-3 rounded-full overflow-hidden p-0.5 border border-pink-200">
+                <div id="timer-progress" class="bg-gradient-to-r from-pink-400 to-purple-400 h-full rounded-full transition-all duration-100 ease-linear" style="width: 100%;"></div>
+            </div>
+
+            <!-- Question Text -->
+            <div class="min-h-[90px] flex items-center justify-center text-center px-2 py-2">
+                <h2 id="question-text" class="text-xl font-extrabold text-slate-800 leading-snug">
+                    Cargando pregunta...
+                </h2>
+            </div>
+
+            <!-- Options Container -->
+            <div id="options-container" class="flex flex-col gap-3 my-2">
+                <!-- Buttons dynamically generated -->
+            </div>
+        </div>
+
+        <!-- SCREEN 3: END THANKS -->
+        <div id="screen-end" class="hidden w-full bg-white/90 backdrop-blur-md p-6 rounded-3xl shadow-xl border-4 border-pink-200 text-center flex flex-col items-center gap-5 animate-float">
+            <div class="w-24 h-24 bg-purple-100 rounded-full flex items-center justify-center text-5xl shadow-inner border-2 border-purple-300">
+                🎁
+            </div>
+
+            <div>
+                <h2 class="text-3xl font-black text-purple-600">¡Muchas Gracias!</h2>
+                <p class="text-base text-slate-600 font-bold mt-2" id="thanks-name">¡Tus respuestas fueron registradas!</p>
+            </div>
+
+            <div class="bg-pink-50 border-2 border-dashed border-pink-300 p-4 rounded-2xl text-sm text-pink-700 leading-relaxed">
+                <p class="font-extrabold text-base mb-1">🤫 Modo Incógnito Activado</p>
+                <p>Los puntajes y los ganadores de los premios se anunciarán más tarde durante la fiesta. ¡Mucha suerte! 🍀✨</p>
+            </div>
+
+            <button onclick="restartGame()" class="w-full py-3.5 bg-purple-400 hover:bg-purple-500 text-white font-bold text-lg rounded-2xl btn-kawaii-purple">
+                Volver al inicio 🏠
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer decoration -->
+    <footer class="text-center text-xs font-semibold text-pink-400 z-10 py-2">
+        Creado con ♡ para la fiesta de cumpleaños ✨
+    </footer>
+
+    <!-- ADMIN MODAL (LEADERBOARD & HOST CONTROL) -->
+    <div id="admin-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border-4 border-purple-300 max-h-[90vh] flex flex-col">
+            
+            <div class="flex justify-between items-center mb-4 pb-2 border-b">
+                <h3 class="text-xl font-black text-purple-600 flex items-center gap-2">
+                    <i class="fa-solid fa-crown text-yellow-400"></i> Panel de Anfitrión
+                </h3>
+                <button onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold p-1">
+                    ✕
+                </button>
+            </div>
+
+            <!-- Lock Login -->
+            <div id="admin-auth" class="flex flex-col gap-3 py-4">
+                <p class="text-xs text-slate-500 font-semibold">Ingresa la clave de anfitrión para ver la tabla de resultados:</p>
+                <input type="password" id="admin-pin" placeholder="Clave (por defecto: 1234)" 
+                    class="w-full px-4 py-3 border-2 border-purple-200 rounded-2xl text-center font-bold text-lg focus:outline-none focus:border-purple-400">
+                <button onclick="verifyAdminPin()" class="w-full py-3 bg-purple-500 text-white font-bold rounded-2xl btn-kawaii-purple">
+                    Ingresar 🔑
+                </button>
+                <p id="admin-error" class="text-xs text-red-500 font-bold text-center hidden">Clave incorrecta. Intenta nuevamente.</p>
+            </div>
+
+            <!-- Admin Content (Leaderboard) -->
+            <div id="admin-content" class="hidden flex flex-col gap-4 overflow-hidden flex-1">
+                <div class="flex justify-between items-center bg-purple-50 p-2.5 rounded-xl border border-purple-200">
+                    <span class="text-xs font-bold text-purple-700">Total participantes: <span id="total-players-count">0</span></span>
+                    <button onclick="exportToEmail()" class="text-xs bg-pink-500 hover:bg-pink-600 text-white font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-sm">
+                        <i class="fa-solid fa-envelope"></i> Enviar Correo
+                    </button>
+                </div>
+
+                <!-- Leaderboard Table Container -->
+                <div class="overflow-y-auto flex-1 pr-1 border border-slate-100 rounded-2xl">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead class="bg-purple-100 text-purple-800 sticky top-0 font-bold">
+                            <tr>
+                                <th class="p-2.5 rounded-tl-xl">#</th>
+                                <th class="p-2.5">Nombre</th>
+                                <th class="p-2.5 text-right rounded-tr-xl">Aciertos</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-body" class="divide-y divide-slate-100">
+                            <!-- Rows injected dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="flex gap-2">
+                    <button onclick="clearLeaderboard()" class="flex-1 py-2 text-xs font-bold text-red-500 bg-red-50 hover:bg-red-100 rounded-xl border border-red-200">
+                        <i class="fa-solid fa-trash mr-1"></i> Borrar Registros
+                    </button>
+                    <button onclick="closeAdminModal()" class="flex-1 py-2 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl">
+                        Cerrar ✕
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // 10 General Knowledge Questions (Spanish)
+        const questions = [
+            {
+                q: "¿Cuál es el océano más grande del mundo?",
+                options: ["Océano Atlántico", "Océano Pacífico", "Océano Índico", "Océano Ártico"],
+                correct: 1 // Pacífico
+            },
+            {
+                q: "¿En qué país se encuentran las Pirámides de Giza?",
+                options: ["Egipto", "México", "Perú", "Grecia"],
+                correct: 0 // Egipto
+            },
+            {
+                q: "¿Quién pintó la famosa obra 'La Mona Lisa'?",
+                options: ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Claude Monet"],
+                correct: 2 // Leonardo da Vinci
+            },
+            {
+                q: "¿Cuál es el metal noble más caro del mundo?",
+                options: ["Oro", "Plata", "Platino", "Rodio"],
+                correct: 3 // Rodio
+            },
+            {
+                q: "¿Cuál es el planeta más cercano al Sol?",
+                options: ["Venus", "Marte", "Mercurio", "Tierra"],
+                correct: 2 // Mercurio
+            },
+            {
+                q: "¿En qué año llegó el primer ser humano a la Luna?",
+                options: ["1965", "1969", "1972", "1959"],
+                correct: 1 // 1969
+            },
+            {
+                q: "¿Cuál es el libro más vendido de la historia después de la Biblia?",
+                options: ["El Principito", "Don Quijote de la Mancha", "Harry Potter", "El Señor de los Anillos"],
+                correct: 1 // Don Quijote
+            },
+            {
+                q: "¿Qué elemento químico tiene el símbolo 'Au'?",
+                options: ["Plata", "Cobre", "Oro", "Aluminio"],
+                correct: 2 // Oro
+            },
+            {
+                q: "¿Cuál es el río más largo del mundo?",
+                options: ["Río Nilo", "Río Amazonas", "Río Misisipi", "Río Yangtsé"],
+                correct: 1 // Amazonas
+            },
+            {
+                q: "¿Cuál es el animal terrestre más rápido del mundo?",
+                options: ["León", "Guepardo (Chita)", "Gacela", "Halcón"],
+                correct: 1 // Guepardo
+            }
+        ];
+
+        // Game State Variables
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let currentPlayerName = "";
+        let timerInterval = null;
+        let timeLeft = 7;
+        const TOTAL_TIME = 7;
+        const HOST_PIN = "1234"; // Default PIN for host admin modal
+
+        // Custom Modal UI Message Helper
+        function showMessage(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-6 left-1/2 -translate-x-1/2 bg-slate-800 text-white font-bold text-sm px-6 py-3 rounded-full shadow-2xl z-50 animate-bounce text-center border-2 border-pink-300';
+            toast.innerHTML = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+
+        // Start Game Handler
+        function startGame() {
+            const input = document.getElementById('playerName');
+            const name = input.value.trim();
+            if (!name) {
+                showMessage("✨ ¡Por favor escribe tu nombre primero!");
+                input.focus();
+                return;
+            }
+
+            currentPlayerName = name;
+            currentQuestionIndex = 0;
+            score = 0;
+
+            document.getElementById('screen-start').classList.add('hidden');
+            document.getElementById('screen-game').classList.remove('hidden');
+
+            loadQuestion();
+        }
+
+        // Load Question & Start Timer
+        function loadQuestion() {
+            clearInterval(timerInterval);
+
+            const qData = questions[currentQuestionIndex];
+            
+            // Update question badge & text
+            document.getElementById('question-number-badge').innerText = `Pregunta ${currentQuestionIndex + 1}/${questions.length}`;
+            document.getElementById('question-text').innerText = qData.q;
+
+            // Render options
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            const optionColors = [
+                'bg-pink-100 hover:bg-pink-200 text-pink-800 border-pink-300',
+                'bg-purple-100 hover:bg-purple-200 text-purple-800 border-purple-300',
+                'bg-teal-100 hover:bg-teal-200 text-teal-800 border-teal-300',
+                'bg-amber-100 hover:bg-amber-200 text-amber-800 border-amber-300'
+            ];
+
+            const optionIcons = ['🎀', '⭐', '🌸', '🍬'];
+
+            qData.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-4 rounded-2xl border-2 ${optionColors[idx % 4]} btn-option font-extrabold text-base flex items-center justify-start gap-3 transition-transform`;
+                btn.innerHTML = `<span class="text-xl">${optionIcons[idx]}</span> <span>${opt}</span>`;
+                btn.onclick = () => selectAnswer(idx);
+                optionsContainer.appendChild(btn);
+            });
+
+            // Start Timer
+            startTimer();
+        }
+
+        // Timer Logic (7 Seconds)
+        function startTimer() {
+            timeLeft = TOTAL_TIME;
+            updateTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                timeLeft -= 0.1;
+                if (timeLeft <= 0) {
+                    timeLeft = 0;
+                    clearInterval(timerInterval);
+                    // Time out - automatically select wrong answer and proceed silently
+                    nextQuestion(false);
+                } else {
+                    updateTimerDisplay();
+                }
+            }, 100);
+        }
+
+        function updateTimerDisplay() {
+            const timerText = document.getElementById('timer-text');
+            const timerProgress = document.getElementById('timer-progress');
+            const timerBox = document.getElementById('timer-box');
+
+            const secsInt = Math.ceil(timeLeft);
+            timerText.innerText = `${secsInt}s`;
+
+            const percentage = (timeLeft / TOTAL_TIME) * 100;
+            timerProgress.style.width = `${percentage}%`;
+
+            if (timeLeft <= 2) {
+                timerBox.className = "flex items-center gap-1.5 bg-red-100 text-red-600 px-3.5 py-1 rounded-full font-black text-sm border border-red-300 pulse-urgent";
+            } else {
+                timerBox.className = "flex items-center gap-1.5 bg-amber-100 text-amber-700 px-3.5 py-1 rounded-full font-black text-sm border border-amber-300";
+            }
+        }
+
+        // Answer selection (Incognito: no correct/incorrect feedback shown to user)
+        function selectAnswer(selectedIndex) {
+            clearInterval(timerInterval);
+            const isCorrect = (selectedIndex === questions[currentQuestionIndex].correct);
+            if (isCorrect) score++;
+
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                finishGame();
+            }
+        }
+
+        // Finish Game & Save Results locally
+        function finishGame() {
+            clearInterval(timerInterval);
+
+            // Save player result in LocalStorage
+            saveResultLocally(currentPlayerName, score, questions.length);
+
+            // Update UI
+            document.getElementById('screen-game').classList.add('hidden');
+            document.getElementById('thanks-name').innerText = `¡Gracias por jugar, ${currentPlayerName}! 💕`;
+            document.getElementById('screen-end').classList.remove('hidden');
+        }
+
+        // Save Result in LocalStorage
+        function saveResultLocally(name, score, total) {
+            try {
+                let records = JSON.parse(localStorage.getItem('birthday_trivia_results') || '[]');
+                records.push({
+                    name: name,
+                    score: score,
+                    total: total,
+                    date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                });
+                localStorage.setItem('birthday_trivia_results', JSON.stringify(records));
+            } catch(e) {
+                console.error("Storage error:", e);
+            }
+        }
+
+        // Restart Game
+        function restartGame() {
+            document.getElementById('playerName').value = '';
+            document.getElementById('screen-end').classList.add('hidden');
+            document.getElementById('screen-start').classList.remove('hidden');
+        }
+
+        // --- ADMIN / HOST MODAL LOGIC ---
+        function openAdminModal() {
+            document.getElementById('admin-modal').classList.remove('hidden');
+            document.getElementById('admin-pin').value = '';
+            document.getElementById('admin-error').classList.add('hidden');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-modal').classList.add('hidden');
+        }
+
+        function verifyAdminPin() {
+            const pin = document.getElementById('admin-pin').value.trim();
+            if (pin === HOST_PIN) {
+                document.getElementById('admin-auth').classList.add('hidden');
+                document.getElementById('admin-content').classList.remove('hidden');
+                renderLeaderboard();
+            } else {
+                document.getElementById('admin-error').classList.remove('hidden');
+            }
+        }
+
+        function renderLeaderboard() {
+            const tbody = document.getElementById('leaderboard-body');
+            tbody.innerHTML = '';
+
+            let records = [];
+            try {
+                records = JSON.parse(localStorage.getItem('birthday_trivia_results') || '[]');
+            } catch(e) {}
+
+            // Sort highest score first
+            records.sort((a, b) => b.score - a.score);
+
+            document.getElementById('total-players-count').innerText = records.length;
+
+            if (records.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-slate-400 text-xs italic">Aún no hay respuestas registradas</td></tr>`;
+                return;
+            }
+
+            records.forEach((rec, idx) => {
+                const tr = document.createElement('tr');
+                tr.className = idx % 2 === 0 ? 'bg-white' : 'bg-slate-50';
+                
+                let medal = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `${idx + 1}`));
+
+                tr.innerHTML = `
+                    <td class="p-2.5 font-bold text-center">${medal}</td>
+                    <td class="p-2.5 font-bold text-slate-700">${escapeHtml(rec.name)} <span class="text-[10px] text-slate-400 font-normal">(${rec.date})</span></td>
+                    <td class="p-2.5 font-black text-right text-pink-600">${rec.score}/${rec.total}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+            });
+        }
+
+        // Export scores report to carlagdvalle@gmail.com
+        function exportToEmail() {
+            let records = [];
+            try {
+                records = JSON.parse(localStorage.getItem('birthday_trivia_results') || '[]');
+            } catch(e) {}
+
+            if (records.length === 0) {
+                showMessage("⚠️ No hay resultados registrados para enviar.");
+                return;
+            }
+
+            records.sort((a, b) => b.score - a.score);
+
+            const email = "carlagdvalle@gmail.com";
+            const subject = encodeURIComponent("🎉 Resultados de Trivia de Cumpleaños Kawaii");
+            
+            let bodyText = "Hola Carla! Aquí tienes el reporte de resultados de la trivia de cumpleaños:\n\n";
+            records.forEach((rec, idx) => {
+                bodyText += `${idx + 1}. ${rec.name} - ${rec.score}/10 correctas (${rec.date})\n`;
+            });
+            bodyText += "\n¡Feliz Cumpleaños! 🎂✨";
+
+            const mailtoUrl = `mailto:${email}?subject=${subject}&body=${encodeURIComponent(bodyText)}`;
+            window.location.href = mailtoUrl;
+        }
+
+        function clearLeaderboard() {
+            if (confirm("¿Estás segura de borra todos los resultados acumulados?")) {
+                localStorage.removeItem('birthday_trivia_results');
+                renderLeaderboard();
+                showMessage("🗑️ Resultados borrados correctamente.");
+            }
+        }
+    </script>
+</body>
+</html>
